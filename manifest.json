@@ -27,7 +27,12 @@
     }
   ],
   "browser_action": {
-    "default_icon": "icons/logo.png"
+    "default_icon": "icons/logo.png",
+    "default_title": "Once a day"
   },
-  "permissions": ["history", "tabs", "activeTab"]
+  "options_ui": {
+    "page": "/ui/dist/options.html",
+    "open_in_tab": true
+  },
+  "permissions": ["history", "storage"]
 }

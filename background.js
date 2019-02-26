@@ -1,5 +1,4 @@
-function gotVisits(visits, sendResponse) {
-    console.log("Visit count: " + visits.length);
+function handleVisists(visits) {
     let message = 'not visited today';
     if(visits.length > 1){
         const lastVisit = moment(visits[visits.length - 2].visitTime);
@@ -7,39 +6,51 @@ function gotVisits(visits, sendResponse) {
             message =  'already visited today'
         }
     }
-    console.log(message)
-    sendResponse(message)
+    return message;
 }
 
-function listVisits(historyItems, sendResponse) {
-    if (historyItems.length) {
-        console.log("URL " + historyItems[0].url);
-        var gettingVisits = browser.history.getVisits({
-            url: historyItems[0].url
-        });
-        gettingVisits.then((visits) => {
-            gotVisits(visits, sendResponse)
-        });
-    }
+function listVisits({historyItems = [], whiteList = []}) {
+    return new Promise((resolve, reject) => {
+        if (historyItems.length && !whiteList.some((el) => historyItems[0].url.indexOf(el) > -1)) {
+            browser.history.getVisits({
+                url: historyItems[0].url
+            }).then((visits) => {
+                resolve(handleVisists(visits))
+            }).catch((error) => {
+                reject(error)
+            });
+        } else {
+            resolve();
+        }
+    });
 }
 
+function getSettings() {
+    return browser.storage.sync.get('whiteList');
+}
 
-
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-        console.log(sender.tab ?
-            "from a content script:" + sender.tab.url :
-            "from the extension");
-
-        var searching = browser.history.search({
+function search({whiteList}){
+    return new Promise((resolve, reject) => {
+        browser.history.search({
             text: "",
             startTime: 0,
             maxResults: 1
+        }).then((historyItems) => {
+            resolve({historyItems, whiteList})
+        }).catch((error) => {
+            reject(error)
         });
-
-        searching.then((historyItems) => {
-            listVisits(historyItems, sendResponse)
-        });
-
-        return true;
     });
+}
+
+function handleMessage() {
+    return new Promise((resolve, reject) => {
+        getSettings()
+            .then(search)
+            .then(listVisits)
+            .then(resolve)
+            .catch(reject);
+    });
+}
+
+browser.runtime.onMessage.addListener(handleMessage);
