@@ -6,8 +6,8 @@ class OptionsContainer extends Component {
     constructor() {
         super();
         this.state = {
-            whiteList: [],
-            newWhiteListItem: '',
+            whitelist: [],
+            newWhitelistItem: '',
             error: ''
         };
         this.onInputChange = this.onInputChange.bind(this);
@@ -18,11 +18,11 @@ class OptionsContainer extends Component {
     }
 
     restore(){
-        browser.storage.sync.get('whiteList')
+        browser.storage.sync.get('whitelist')
             .then((result) => {
                 this.setState({
-                    whiteList: result.whiteList || [],
-                    newWhiteListItem: '',
+                    whitelist: result.whitelist || [],
+                    newWhitelistItem: '',
                     error: ''
                 });
             });
@@ -34,31 +34,31 @@ class OptionsContainer extends Component {
 
 
     onInputChange(event) {
-        this.setState({newWhiteListItem: event.target.value});
+        this.setState({newWhitelistItem: event.target.value});
     }
 
     onRemove(index) {
-        const { whiteList } = this.state;
+        const { whitelist } = this.state;
 
         browser.storage.sync.set({
-            whiteList: [...whiteList.slice(0, index), ...whiteList.slice(index + 1)]
+            whitelist: [...whitelist.slice(0, index), ...whitelist.slice(index + 1)]
         }).then(() => {
             this.restore()
         });
     }
 
     onSave() {
-        const { whiteList, newWhiteListItem } = this.state;
+        const { whitelist, newWhitelistItem } = this.state;
 
         browser.storage.sync.set({
-            whiteList: [...whiteList, newWhiteListItem]
+            whitelist: [...whitelist, newWhitelistItem]
         }).then(() => {
             this.restore()
         });
     }
 
     render() {
-        const { whiteList, newWhiteListItem } = this.state;
+        const { whitelist, newWhitelistItem } = this.state;
         return (
             <div className="options-container">
                 <h1>Once a day</h1>
@@ -66,7 +66,7 @@ class OptionsContainer extends Component {
                 <h2>Whitelist</h2>
 
                 <ul>
-                    {whiteList.map((value, index) => (
+                    {whitelist.map((value, index) => (
                         <li key={`item-${index}`}>
                             {value}
                             <button onClick={() =>
@@ -83,7 +83,7 @@ class OptionsContainer extends Component {
                         <input
                             type="text"
                             placeholder="url"
-                            value={newWhiteListItem}
+                            value={newWhitelistItem}
                             onChange={this.onInputChange}
                         />
                     </div>

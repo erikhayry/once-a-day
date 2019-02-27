@@ -9,9 +9,9 @@ function handleVisists(visits) {
     return message;
 }
 
-function listVisits({historyItems = [], whiteList = []}) {
+function listVisits({historyItems = [], whitelist = []}) {
     return new Promise((resolve, reject) => {
-        if (historyItems.length && !whiteList.some((el) => historyItems[0].url.indexOf(el) > -1)) {
+        if (historyItems.length && !whitelist.some((el) => historyItems[0].url.indexOf(el) > -1)) {
             browser.history.getVisits({
                 url: historyItems[0].url
             }).then((visits) => {
@@ -26,21 +26,38 @@ function listVisits({historyItems = [], whiteList = []}) {
 }
 
 function getSettings() {
-    return browser.storage.sync.get('whiteList');
+    return browser.storage.sync.get('whitelist');
 }
 
-function search({whiteList}){
+function search({whitelist}){
     return new Promise((resolve, reject) => {
         browser.history.search({
             text: "",
             startTime: 0,
             maxResults: 1
         }).then((historyItems) => {
-            resolve({historyItems, whiteList})
+            resolve({historyItems, whitelist})
         }).catch((error) => {
             reject(error)
         });
     });
+}
+
+function add(whitelist = [], item){
+    browser.storage.sync.set({
+        whitelist: [...whitelist, item]
+    }).then(() => {
+        browser.notifications.create({
+            'type': 'basic',
+            'iconUrl': browser.extension.getURL('icons/logo@2x.png'),
+            'title': 'Once a day',
+            'message': `${item} added to whitelist`
+        });
+    })
+}
+
+function addToWhitelist(item){
+        getSettings().then(({whitelist}) => add(whitelist, item))
 }
 
 function handleMessage() {
@@ -53,4 +70,30 @@ function handleMessage() {
     });
 }
 
+
+function handleBrowserAction(){
+    browser.runtime.openOptionsPage();
+}
+
+function handleContextMenu({menuItemId, pageUrl}){
+    switch (menuItemId) {
+        case "add-to-whitelist":
+            const host = new URL(pageUrl).host;
+            addToWhitelist(host);
+            break;
+    }
+}
+
+/*
+    Add context menu items
+ */
+
+browser.contextMenus.create({
+    id: "add-to-whitelist",
+    title: "Add to whitelist",
+    contexts: ["all"]
+});
+
+browser.contextMenus.onClicked.addListener(handleContextMenu);
+browser.browserAction.onClicked.addListener(handleBrowserAction);
 browser.runtime.onMessage.addListener(handleMessage);
