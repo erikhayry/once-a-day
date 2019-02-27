@@ -1,0 +1,61 @@
+@import "reset";
+
+*{
+  box-sizing: border-box;
+}
+
+body{
+  font-family: 'Nunito', sans-serif;
+}
+
+h1{
+  text-align: center;
+}
+
+h1, h2{
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin: 1rem;
+  padding: 1rem;
+}
+
+li {
+  margin: 1rem;
+  padding: 1rem;
+  border-bottom: 1px solid #222;
+}
+
+
+input{
+  background-color: transparent;
+  display: block;
+  padding: 1rem;
+  width: 100%;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+}
+
+button{
+  font-family: 'Nunito', sans-serif;
+  border: none;
+  float: right;
+  background-color: #222;
+  color: #fff;
+  cursor: pointer;
+}
+
+.options-container{
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.form{
+  margin: 1rem;
+  padding: 1rem;
+
+}
+
+.input-container{
+  background-color: #ccc;
+  margin-bottom: 1rem;
+}

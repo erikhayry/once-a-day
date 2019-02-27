@@ -1,45 +1,6 @@
 import browser from "webextension-polyfill";
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
-import {
-    SortableContainer,
-    SortableElement,
-    arrayMove,
-} from 'react-sortable-hoc';
-import { List, Segment, Button, Form, Divider, Container, Header, Message } from 'semantic-ui-react'
-
-const INVALID_URL = 'invalid-url';
-
-const SortableItem = SortableElement(({value, sortIndex, onRemove}) =>
-    <List.Item>
-        <List.Content style={{
-            marginBottom: 10
-        }}>
-        {value}
-        </List.Content>
-        <List.Content floated='right'>
-            <Button onClick={() =>
-                onRemove(sortIndex)
-            }>Radera</Button>
-        </List.Content>
-    </List.Item>);
-
-const SortableList = SortableContainer(({items, onRemove}) => {
-    return (
-        <Segment>
-            <List divided relaxed>
-            {items.map((value, index) => (
-                <SortableItem
-                    key={`item-${index}`}
-                    index={index} value={value}
-                    onRemove={onRemove}
-                    sortIndex={index}
-                />
-            ))}
-            </List>
-        </Segment>
-    );
-});
 
 class OptionsContainer extends Component {
     constructor() {
@@ -50,7 +11,6 @@ class OptionsContainer extends Component {
             error: ''
         };
         this.onInputChange = this.onInputChange.bind(this);
-        this.onSortEnd = this.onSortEnd.bind(this);
         this.onSave = this.onSave.bind(this);
         this.onRemove = this.onRemove.bind(this);
         browser.storage.sync.get = browser.storage.sync.get.bind(this);
@@ -72,8 +32,9 @@ class OptionsContainer extends Component {
         this.restore()
     }
 
-    onInputChange(e, { name, value }) {
-        this.setState({[name]: value})
+
+    onInputChange(event) {
+        this.setState({newWhiteListItem: event.target.value});
     }
 
     onRemove(index) {
@@ -96,46 +57,39 @@ class OptionsContainer extends Component {
         });
     }
 
-    onSortEnd({oldIndex, newIndex}) {
-        this.setState(({whiteList = []}) => ({
-            whiteList: arrayMove(whiteList, oldIndex, newIndex),
-        }), () => {
-            browser.storage.sync.set({
-                whiteList: this.state.whiteList
-            });
-        });
-    };
-
     render() {
-        const { whiteList, newWhiteListItem, error } = this.state;
+        const { whiteList, newWhiteListItem } = this.state;
         return (
-            <Container text>
-                <Header as='h1'>Once a day</Header>
+            <div className="options-container">
+                <h1>Once a day</h1>
 
-                <Divider />
+                <h2>Whitelist</h2>
 
-                <SortableList items={whiteList} onSortEnd={this.onSortEnd} onRemove={this.onRemove}/>
+                <ul>
+                    {whiteList.map((value, index) => (
+                        <li key={`item-${index}`}>
+                            {value}
+                            <button onClick={() =>
+                                this.onRemove(index)
+                            }>Radera</button>
+                        </li>)
+                    )}
+                </ul>
 
-                <Divider />
+                <h2>Add url to whitelist</h2>
 
-                <Form onSubmit={this.onSave} error={error === INVALID_URL}>
-                    <Form.Field>
-                        <Form.Input
-                            placeholder='url'
-                            name='newWhiteListItem'
-                            label='Lägg till adress'
+                <div className="form">
+                    <div className="input-container">
+                        <input
+                            type="text"
+                            placeholder="url"
                             value={newWhiteListItem}
                             onChange={this.onInputChange}
                         />
-                    </Form.Field>
-                    {error === INVALID_URL && <Message
-                        error
-                        header='Fel format'
-                        content='Webbadressen du försöker lägga till verkar vara i fel format.'
-                    />}
-                    <Form.Button floated='right' content='Lägg till' />
-                </Form>
-            </Container>
+                    </div>
+                    <button onClick={this.onSave}>Lägg till</button>
+                </div>
+            </div>
         );
     }
 }

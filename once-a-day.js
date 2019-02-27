@@ -1,7 +1,7 @@
 function handleResponse(response) {
     console.log(response)
     if(response === 'already visited today'){
-        document.body.style.opacity = 0.1
+        document.body.style.opacity = 0.9
     }}
 
 function handleError(error) {
