@@ -27,6 +27,10 @@ module.exports = {
         new HtmlWebPackPlugin({
             template: "./src/options.html",
             filename: "./options.html"
+        }),
+        new HtmlWebPackPlugin({
+            template: "./src/landing.html",
+            filename: "./landing.html"
         })
     ]
 };

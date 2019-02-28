@@ -34,5 +34,8 @@
     "page": "/ui/dist/options.html",
     "open_in_tab": true
   },
-  "permissions": ["history", "storage", "contextMenus", "notifications"]
+  "permissions": ["history", "storage", "contextMenus", "notifications"],
+  "web_accessible_resources": [
+    "/ui/dist/landing.html"
+  ]
 }

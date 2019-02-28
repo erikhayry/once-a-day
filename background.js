@@ -6,7 +6,10 @@ function handleVisists(visits) {
             message =  'already visited today'
         }
     }
-    return message;
+    return {
+        message,
+        url: browser.runtime.getURL('/ui/dist/landing.html')
+    };
 }
 
 function listVisits({historyItems = [], whitelist = []}) {

@@ -1,7 +1,7 @@
-function handleResponse(response) {
-    console.log(response)
-    if(response === 'already visited today'){
-        document.body.style.opacity = 0.9
+function handleResponse({message, url}) {
+    console.log(message, url)
+    if(message === 'already visited today'){
+        window.location.href = `${url}?url=${window.location.href}`
     }}
 
 function handleError(error) {
