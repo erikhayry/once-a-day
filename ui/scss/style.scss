@@ -10,6 +10,15 @@ body{
 
 h1{
   text-align: center;
+  span {
+    display: inline;
+    background-color: #222;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 0;
+    padding: 0.5rem;
+    font-size: 1.2rem;
+  }
 }
 
 h1, h2{
@@ -17,6 +26,7 @@ h1, h2{
   text-transform: uppercase;
   margin: 1rem;
   padding: 1rem;
+  line-height: 1.5;
 }
 
 li {
@@ -42,11 +52,13 @@ button{
   background-color: #222;
   color: #fff;
   cursor: pointer;
+  text-transform: uppercase;
 }
 
-.options-container{
+.page-container{
   max-width: 600px;
   margin: 0 auto;
+  padding: 1rem;
 }
 
 .form{
@@ -58,4 +70,13 @@ button{
 .input-container{
   background-color: #ccc;
   margin-bottom: 1rem;
+}
+
+.action-container{
+  text-align: center;
+}
+
+.action-btn{
+  float: none;
+  font-size: 1.1rem;
 }

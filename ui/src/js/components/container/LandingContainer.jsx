@@ -8,21 +8,50 @@ class LandingContainer extends Component {
         this.state = {
             url: ''
         };
+
+        this.onWhitelistHost = this.onWhitelistHost.bind(this);
+
     }
 
     componentDidMount() {
+        const url =  window.location.search.replace('?url=', '');
+        const host = new URL(url).host;
+
         this.setState({
-            url: window.location.search.replace('?url=', '')
+            url, host
         });
 
     }
 
+    getWhitelist(){
+        return browser.storage.sync.get('whitelist')
+    }
+
+    setWhitelistItem(whitelist){
+        return browser.storage.sync.set({whitelist})
+    }
+
+    onWhitelistHost(){
+        const { url, host } = this.state;
+
+        this.getWhitelist()
+            .then(({whitelist = []}) => this.setWhitelistItem([...whitelist, host]))
+            .then(() => {
+                window.location.href = url;
+            });
+    }
+
     render() {
-        const { url } = this.state;
+        const { host } = this.state;
+
         return (
-            <div >
-                Once a day <br/>
-                {url} already visited today
+            <div className="page-container">
+                <h1>Once <span>a</span> day</h1>
+
+                <h2>{host} already visited today</h2>
+                <div className="action-container">
+                    <button className="action-btn" onClick={this.onWhitelistHost}>Whitelist website</button>
+                </div>
             </div>
         );
     }

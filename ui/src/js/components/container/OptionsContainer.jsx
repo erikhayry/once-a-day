@@ -6,35 +6,22 @@ class OptionsContainer extends Component {
     constructor() {
         super();
         this.state = {
-            whitelist: [],
-            newWhitelistItem: '',
-            error: ''
+            whitelist: []
         };
-        this.onInputChange = this.onInputChange.bind(this);
-        this.onSave = this.onSave.bind(this);
         this.onRemove = this.onRemove.bind(this);
-        browser.storage.sync.get = browser.storage.sync.get.bind(this);
-        browser.storage.sync.set = browser.storage.sync.set.bind(this);
     }
 
     restore(){
         browser.storage.sync.get('whitelist')
             .then((result) => {
                 this.setState({
-                    whitelist: result.whitelist || [],
-                    newWhitelistItem: '',
-                    error: ''
+                    whitelist: result.whitelist || []
                 });
             });
     }
 
     componentDidMount() {
         this.restore()
-    }
-
-
-    onInputChange(event) {
-        this.setState({newWhitelistItem: event.target.value});
     }
 
     onRemove(index) {
@@ -47,21 +34,11 @@ class OptionsContainer extends Component {
         });
     }
 
-    onSave() {
-        const { whitelist, newWhitelistItem } = this.state;
-
-        browser.storage.sync.set({
-            whitelist: [...whitelist, newWhitelistItem]
-        }).then(() => {
-            this.restore()
-        });
-    }
-
     render() {
-        const { whitelist, newWhitelistItem } = this.state;
+        const { whitelist } = this.state;
         return (
-            <div className="options-container">
-                <h1>Once a day</h1>
+            <div className="page-container">
+                <h1>Once <span>a</span> day</h1>
 
                 <h2>Whitelist</h2>
 
@@ -75,20 +52,6 @@ class OptionsContainer extends Component {
                         </li>)
                     )}
                 </ul>
-
-                <h2>Add url to whitelist</h2>
-
-                <div className="form">
-                    <div className="input-container">
-                        <input
-                            type="text"
-                            placeholder="url"
-                            value={newWhitelistItem}
-                            onChange={this.onInputChange}
-                        />
-                    </div>
-                    <button onClick={this.onSave}>Lägg till</button>
-                </div>
             </div>
         );
     }
