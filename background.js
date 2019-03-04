@@ -1,3 +1,9 @@
+const VERSION = '1.0.0';
+Sentry.init({ dsn: 'https://dd2362f7d005446585e6414b1662594e@sentry.io/1407701' });
+Sentry.configureScope((scope) => {
+    scope.setTag("version", VERSION);
+});
+
 function handleVisists(visits) {
     let message = 'not visited today';
     if(visits.length > 1){
@@ -78,25 +84,5 @@ function handleBrowserAction(){
     browser.runtime.openOptionsPage();
 }
 
-function handleContextMenu({menuItemId, pageUrl}){
-    switch (menuItemId) {
-        case "add-to-whitelist":
-            const host = new URL(pageUrl).host;
-            addToWhitelist(host);
-            break;
-    }
-}
-
-/*
-    Add context menu items
- */
-
-browser.contextMenus.create({
-    id: "add-to-whitelist",
-    title: "Add to whitelist",
-    contexts: ["all"]
-});
-
-browser.contextMenus.onClicked.addListener(handleContextMenu);
 browser.browserAction.onClicked.addListener(handleBrowserAction);
 browser.runtime.onMessage.addListener(handleMessage);
