@@ -4,18 +4,18 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-function handleVisists(visits) {
-    let message = 'not visited today';
+function handleVisits(visits) {
     if(visits.length > 1){
-        const lastVisit = moment(visits[visits.length - 2].visitTime);
-        if(lastVisit.dayOfYear() === moment().dayOfYear()){
-            message =  'already visited today'
-        }
+        const visitTime = visits[visits.length - 2].visitTime;
+        return {
+            lastVisit: visitTime,
+            isVisitedToday: moment(visitTime).dayOfYear() === moment().dayOfYear(),
+            url: browser.runtime.getURL('/ui/dist/landing.html')
+        };
+
     }
-    return {
-        message,
-        url: browser.runtime.getURL('/ui/dist/landing.html')
-    };
+
+    return undefined;
 }
 
 function listVisits({historyItems = [], whitelist = []}) {
@@ -24,12 +24,12 @@ function listVisits({historyItems = [], whitelist = []}) {
             browser.history.getVisits({
                 url: historyItems[0].url
             }).then((visits) => {
-                resolve(handleVisists(visits))
+                resolve(handleVisits(visits))
             }).catch((error) => {
                 reject(error)
             });
         } else {
-            resolve();
+            resolve({});
         }
     });
 }

@@ -4,10 +4,9 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-function handleResponse({message, url}) {
-    console.log(message, url)
-    if(message === 'already visited today'){
-        window.location.href = `${url}?url=${window.location.href}`
+function handleResponse({isVisitedToday, lastVisit, url} = {}) {
+    if(isVisitedToday){
+        window.location.href = `${url}?url=${window.location.href}&lastVisit=${lastVisit}`;
     }}
 
 function handleError(error) {

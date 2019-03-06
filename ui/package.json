@@ -42,6 +42,8 @@
     "webpack-cli": "^3.2.3"
   },
   "dependencies": {
+    "moment": "^2.24.0",
+    "react-moment": "^0.8.4",
     "react-sortable-hoc": "^1.6.1",
     "webextension-polyfill": "^0.4.0"
   }
