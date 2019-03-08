@@ -4,12 +4,34 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-function handleVisits(visits) {
-    if(visits.length > 1){
-        const visitTime = visits[visits.length - 2].visitTime;
+function visitsTodayFilter(visit) {
+    const visitTime = visit.visitTime;
+
+    return moment(visitTime).dayOfYear() === moment().dayOfYear()
+}
+
+function findEarlier(el, index, arr){
+    const nextEl = arr[index + 1];
+    const visitTime = el.visitTime;
+    if(nextEl){
+        const diff = moment(nextEl.visitTime).diff(moment(visitTime), 'minutes');
+
+        return diff > 5;
+    }
+
+    return false;
+}
+
+function handleVisits(visits = []) {
+    const visitsToday = visits.filter(visitsTodayFilter);
+    const earlierVisit = visitsToday.find(findEarlier);
+
+    if(earlierVisit){
+        const visitTime = earlierVisit.visitTime;
         return {
+            earlierVisit: earlierVisit,
             lastVisit: visitTime,
-            isVisitedToday: moment(visitTime).dayOfYear() === moment().dayOfYear(),
+            isVisitedToday: true,
             url: browser.runtime.getURL('/ui/dist/landing.html')
         };
 
@@ -21,8 +43,9 @@ function handleVisits(visits) {
 function listVisits({historyItems = [], whitelist = []}) {
     return new Promise((resolve, reject) => {
         if (historyItems.length && !whitelist.some((el) => historyItems[0].url.indexOf(el) > -1)) {
+            const origin = new URL(historyItems[0].url).origin;
             browser.history.getVisits({
-                url: historyItems[0].url
+                url: origin
             }).then((visits) => {
                 resolve(handleVisits(visits))
             }).catch((error) => {
