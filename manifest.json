@@ -37,6 +37,7 @@
   },
   "permissions": ["history", "storage", "contextMenus", "notifications"],
   "web_accessible_resources": [
+    "/ui/static/bg-min.png",
     "/ui/dist/landing.html"
   ]
 }

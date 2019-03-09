@@ -4,6 +4,8 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
+const ALLOWED_BROWSING_TIME = 0;
+
 function visitsTodayFilter(visit) {
     const visitTime = visit.visitTime;
 
@@ -16,7 +18,7 @@ function findEarlier(el, index, arr){
     if(nextEl){
         const diff = moment(nextEl.visitTime).diff(moment(visitTime), 'minutes');
 
-        return diff > 5;
+        return diff > ALLOWED_BROWSING_TIME;
     }
 
     return false;
@@ -29,7 +31,6 @@ function handleVisits(visits = []) {
     if(earlierVisit){
         const visitTime = earlierVisit.visitTime;
         return {
-            earlierVisit: earlierVisit,
             lastVisit: visitTime,
             isVisitedToday: true,
             url: browser.runtime.getURL('/ui/dist/landing.html')
@@ -37,7 +38,7 @@ function handleVisits(visits = []) {
 
     }
 
-    return undefined;
+    return {};
 }
 
 function listVisits({historyItems = [], whitelist = []}) {

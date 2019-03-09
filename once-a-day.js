@@ -6,7 +6,7 @@ Sentry.configureScope((scope) => {
 
 function handleResponse({isVisitedToday, lastVisit, url} = {}) {
     if(isVisitedToday){
-        window.location.href = `${url}?url=${window.location.href}&lastVisit=${lastVisit}`;
+        window.location.href = `${url}?href=${window.location.href}&lastVisit=${lastVisit}`;
     }}
 
 function handleError(error) {

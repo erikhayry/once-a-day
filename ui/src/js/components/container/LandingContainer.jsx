@@ -12,17 +12,17 @@ class LandingContainer extends Component {
             host: ''
         };
 
-        this.onWhitelistHost = this.onWhitelistHost.bind(this);
-
+        this.onWhitelist = this.onWhitelist.bind(this);
     }
 
     componentDidMount() {
-        const { url, lastVisit } =  this.getSearch();
-        const host = new URL(url).host;
+        const { href, lastVisit } =  this.getSearch();
+        const { host, pathname } = new URL(href);
 
         this.setState({
-            url,
+            href,
             host,
+            pathname,
             lastVisit: parseFloat(lastVisit)
         });
 
@@ -52,18 +52,18 @@ class LandingContainer extends Component {
         return browser.storage.sync.set({whitelist})
     }
 
-    onWhitelistHost(){
-        const { url, host } = this.state;
+    onWhitelist( path ){
+        const { href } = this.state;
 
         this.getWhitelist()
-            .then(({whitelist = []}) => this.setWhitelistItem([...whitelist, host]))
+            .then(({whitelist = []}) => this.setWhitelistItem([...whitelist, path]))
             .then(() => {
-                window.location.href = url;
+                window.location.href = href;
             });
     }
 
     render() {
-        const { host, lastVisit } = this.state;
+        const { host, pathname = '', lastVisit } = this.state;
 
         return (
             <div className="page-container">
@@ -75,7 +75,17 @@ class LandingContainer extends Component {
                     textAlign: 'center'
                 }}>Last visit <Moment format="YYYY-MM-DD HH:mm">{lastVisit}</Moment></h3>
                 <div className="action-container">
-                    <button className="action-btn" onClick={this.onWhitelistHost}>Whitelist website</button>
+                    Allow multiple visits per day for website <button aria-label={`Allow multiple visits per day for ${host}`} className="action-btn" onClick={() => {
+                        this.onWhitelist(host)
+                    }}>{ host }</button>
+                    {pathname.length > 1 &&
+                        <>
+                            or for path <button className="action-btn" aria-label={`Allow multiple visits per day for ${host + pathname}`} onClick={() => {
+                            this.onWhitelist(host + pathname)
+                                }}>{ host + pathname }
+                            </button>
+                        </>
+                    }
                 </div>
             </div>
         );

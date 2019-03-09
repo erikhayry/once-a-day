@@ -4,8 +4,13 @@
   box-sizing: border-box;
 }
 
-body{
+body, html{
   font-family: 'Nunito', sans-serif;
+  background-image: url(/ui/static/bg-min.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100%;
+  overflow: auto;
 }
 
 h1{
@@ -31,6 +36,11 @@ h1, h2, h3{
   margin: 1rem;
   padding: 1rem;
   line-height: 1.5;
+}
+
+p{
+  padding: 0 1rem;
+  margin: 1rem;
 }
 
 li {
@@ -63,6 +73,7 @@ button{
   max-width: 600px;
   margin: 0 auto;
   padding: 1rem;
+  background-color: #fff;
 }
 
 .form{
@@ -82,5 +93,7 @@ button{
 
 .action-btn{
   float: none;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  display: block;
+  margin: 0.5rem auto;
 }

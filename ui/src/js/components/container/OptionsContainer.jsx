@@ -41,14 +41,14 @@ class OptionsContainer extends Component {
                 <h1>Once <span>a</span> day</h1>
 
                 <h2>Whitelist</h2>
-
+                <p>Multiple visits per day available for websites below</p>
                 <ul>
                     {whitelist.map((value, index) => (
                         <li key={`item-${index}`}>
                             {value}
                             <button onClick={() =>
                                 this.onRemove(index)
-                            }>Radera</button>
+                            }>Remove</button>
                         </li>)
                     )}
                 </ul>
@@ -56,6 +56,7 @@ class OptionsContainer extends Component {
         );
     }
 }
+
 export default OptionsContainer;
 
 const wrapper = document.getElementById("options-container");
