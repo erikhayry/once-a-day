@@ -4,7 +4,7 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-const ALLOWED_BROWSING_TIME = 0;
+const ALLOWED_BROWSING_TIME = 5;
 
 function visitsTodayFilter(visit) {
     const visitTime = visit.visitTime;
@@ -42,6 +42,7 @@ function handleVisits(visits = []) {
 }
 
 function listVisits({historyItems = [], whitelist = []}) {
+
     return new Promise((resolve, reject) => {
         if (historyItems.length && !whitelist.some((el) => historyItems[0].url.indexOf(el) > -1)) {
             const origin = new URL(historyItems[0].url).origin;
@@ -76,23 +77,6 @@ function search({whitelist}){
     });
 }
 
-function add(whitelist = [], item){
-    browser.storage.sync.set({
-        whitelist: [...whitelist, item]
-    }).then(() => {
-        browser.notifications.create({
-            'type': 'basic',
-            'iconUrl': browser.extension.getURL('icons/logo@2x.png'),
-            'title': 'Once a day',
-            'message': `${item} added to whitelist`
-        });
-    })
-}
-
-function addToWhitelist(item){
-        getSettings().then(({whitelist}) => add(whitelist, item))
-}
-
 function handleMessage() {
     return new Promise((resolve, reject) => {
         getSettings()
@@ -108,5 +92,28 @@ function handleBrowserAction(){
     browser.runtime.openOptionsPage();
 }
 
+function redirect(requestDetails) {
+    const { type, url, method } = requestDetails;
+
+    return handleMessage()
+        .then((res) => {
+            const { isVisitedToday } = res;
+            if (isVisitedToday) {
+                return {
+                    redirectUrl: browser.runtime.getURL('/ui/dist/landing.html') + '?host=' + url
+                };
+            }
+
+        })
+}
+
 browser.browserAction.onClicked.addListener(handleBrowserAction);
 browser.runtime.onMessage.addListener(handleMessage);
+//browser.webRequest.onBeforeRequest.addListener(
+//    redirect,
+//    {
+//        urls:["<all_urls>"],
+//        types:["main_frame"]
+//    },
+//    ["blocking"]
+//);

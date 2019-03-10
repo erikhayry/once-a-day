@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Once a day",
-  "version": "1.0",
+  "version": "1.2",
   "description": "",
   "icons": {
     "48": "icons/logo.png",
@@ -35,7 +35,10 @@
     "page": "/ui/dist/options.html",
     "open_in_tab": true
   },
-  "permissions": ["history", "storage", "contextMenus", "notifications"],
+  "permissions": [
+    "history",
+    "storage"
+  ],
   "web_accessible_resources": [
     "/ui/static/bg-min.png",
     "/ui/dist/landing.html"
