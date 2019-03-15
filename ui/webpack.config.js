@@ -19,6 +19,10 @@ module.exports = {
             }
         ]
     },
+    output: {
+        path: __dirname + '/../dist',
+        filename: 'index_bundle.js'
+    },
     plugins: [
         new HtmlWebPackPlugin({
             template: "./src/options.html",

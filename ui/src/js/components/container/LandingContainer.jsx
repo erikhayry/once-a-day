@@ -25,7 +25,6 @@ class LandingContainer extends Component {
             pathname,
             lastVisit: parseFloat(lastVisit)
         });
-
     }
 
     getSearch(){
@@ -70,10 +69,14 @@ class LandingContainer extends Component {
                 <h1>Once <span>a</span> day</h1>
                 <h2 style={{
                     textAlign: 'center'
-                }}>{host} already visited today</h2>
+                }}>
+                    {host} already visited today
+                </h2>
                 <h3 style={{
                     textAlign: 'center'
-                }}>Last visit <Moment format="YYYY-MM-DD HH:mm">{lastVisit}</Moment></h3>
+                }}>
+                    Last visit <Moment format="YYYY-MM-DD HH:mm">{lastVisit}</Moment>
+                </h3>
                 <div className="action-container">
                     Allow multiple visits per day for website <button aria-label={`Allow multiple visits per day for ${host}`} className="action-btn" onClick={() => {
                         this.onWhitelist(host)
@@ -91,9 +94,10 @@ class LandingContainer extends Component {
         );
     }
 }
+
 export default LandingContainer;
 
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', () => {
     const wrapper = document.getElementById('landing-container');
     wrapper ? ReactDOM.render(<LandingContainer />, wrapper) : false;
 });

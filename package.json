@@ -20,5 +20,8 @@
     "@sentry/browser": "^4.6.3",
     "moment": "^2.24.0",
     "webextension-polyfill": "^0.4.0"
+  },
+  "devDependencies": {
+    "lodash": "^4.17.11"
   }
 }

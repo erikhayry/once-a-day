@@ -33,7 +33,7 @@ function handleVisits(visits = []) {
         return {
             lastVisit: visitTime,
             isVisitedToday: true,
-            url: browser.runtime.getURL('/ui/dist/landing.html')
+            url: browser.runtime.getURL('/dist/landing.html')
         };
 
     }
@@ -100,7 +100,7 @@ function redirect(requestDetails) {
             const { isVisitedToday } = res;
             if (isVisitedToday) {
                 return {
-                    redirectUrl: browser.runtime.getURL('/ui/dist/landing.html') + '?host=' + url
+                    redirectUrl: browser.runtime.getURL('/dist/landing.html') + '?host=' + url
                 };
             }
 

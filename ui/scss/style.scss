@@ -6,7 +6,7 @@
 
 body, html{
   font-family: 'Nunito', sans-serif;
-  background-image: url(/ui/static/bg-min.png);
+  background-image: url(/static/bg-min.png);
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100%;
@@ -83,7 +83,7 @@ button{
 }
 
 .input-container{
-  background-color: #ccc;
+  background-color: #cccccc;
   margin-bottom: 1rem;
 }
 

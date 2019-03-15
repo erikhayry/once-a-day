@@ -18,7 +18,7 @@
     "build": "webpack --mode production",
     "scss": "node-sass — watch scss -o css",
     "watch-jsx": "npm-watch",
-    "css-compile": "node-sass --output dist/css scss/style.scss",
+    "css-compile": "node-sass --output ../dist/css scss/style.scss",
     "precss-watch": "npm run css-compile",
     "watch-css": "npm run css-compile -- -w",
     "start": "concurrently \"npm:watch-jsx\" \"npm:watch-css\""
