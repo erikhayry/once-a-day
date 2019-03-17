@@ -37,22 +37,27 @@ class OptionsContainer extends Component {
     render() {
         const { whitelist } = this.state;
         return (
-            <div className="page-container">
-                <h1>Once <span>a</span> day</h1>
+            <>
+                <div className="page-container">
+                    <h1>Once <span>a</span> day</h1>
 
-                <h2>Whitelist</h2>
-                <p>Multiple visits per day available for websites below</p>
-                <ul>
-                    {whitelist.map((value, index) => (
-                        <li key={`item-${index}`}>
-                            {value}
-                            <button onClick={() =>
-                                this.onRemove(index)
-                            }>Remove</button>
-                        </li>)
-                    )}
-                </ul>
-            </div>
+                    <h2>Whitelist</h2>
+                    <p>Multiple visits per day available for websites below</p>
+                    <ul>
+                        {whitelist.map((value, index) => (
+                            <li key={`item-${index}`}>
+                                {value}
+                                <button onClick={() =>
+                                    this.onRemove(index)
+                                }>Remove</button>
+                            </li>)
+                        )}
+                    </ul>
+                </div>
+                <div className="credit-container">
+                    Background by <a href="https://ellenportin.myportfolio.com/" target="_blank">Ellen Portin</a>
+                </div>
+            </>
         );
     }
 }

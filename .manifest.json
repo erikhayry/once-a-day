@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
   "name": "Once a day",
-  "version": "1.2",
-  "description": "",
+  "version": "1.3",
+  "description": "Most websites you only really need to visit Once A Day",
   "icons": {
     "48": "icons/logo.png",
     "96": "icons/logo@2x.png"

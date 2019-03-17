@@ -4,7 +4,7 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-const ALLOWED_BROWSING_TIME = 5;
+const ALLOWED_BROWSING_TIME_IN_MINUTES = 20;
 
 function visitsTodayFilter(visit) {
     const visitTime = visit.visitTime;
@@ -18,7 +18,7 @@ function findEarlier(el, index, arr){
     if(nextEl){
         const diff = moment(nextEl.visitTime).diff(moment(visitTime), 'minutes');
 
-        return diff > ALLOWED_BROWSING_TIME;
+        return diff > ALLOWED_BROWSING_TIME_IN_MINUTES;
     }
 
     return false;

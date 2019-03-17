@@ -56,3 +56,5 @@ typings/
 
 # Output of 'npm pack'
 *.tgz
+
+manifest.json
