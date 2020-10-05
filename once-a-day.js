@@ -4,7 +4,8 @@ Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
 });
 
-function handleResponse({isVisitedToday, lastVisit, url} = {}) {
+function handleResponse({ isVisitedToday, lastVisit, url } = {}) {
+    console.log("handleResponse", isVisitedToday, lastVisit, url)
     if(isVisitedToday){
         window.location.href = `${url}?href=${window.location.href}&lastVisit=${lastVisit}`;
     }}

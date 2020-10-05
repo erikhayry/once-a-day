@@ -8,7 +8,6 @@ const ALLOWED_BROWSING_TIME_IN_MINUTES = 20;
 
 function visitsTodayFilter(visit) {
     const visitTime = visit.visitTime;
-
     return moment(visitTime).dayOfYear() === moment().dayOfYear()
 }
 
@@ -35,85 +34,59 @@ function handleVisits(visits = []) {
             isVisitedToday: true,
             url: browser.runtime.getURL('/dist/landing.html')
         };
-
     }
 
-    return {};
+    return { isVisitedToday: false }
 }
 
-function listVisits({historyItems = [], whitelist = []}) {
+async function listVisits() {
+    const url = await getUrl();
+    const allowList = await getAllowList();
+    const urlIsAllowed = url && allowList.some(allowListItem => url.indexOf(allowListItem) > -1);
 
-    return new Promise((resolve, reject) => {
-        if (historyItems.length && !whitelist.some((el) => historyItems[0].url.indexOf(el) > -1)) {
-            const origin = new URL(historyItems[0].url).origin;
-            browser.history.getVisits({
-                url: origin
-            }).then((visits) => {
-                resolve(handleVisits(visits))
-            }).catch((error) => {
-                reject(error)
-            });
-        } else {
-            resolve({});
-        }
+    if(urlIsAllowed){
+        return { isVisitedToday: false }
+    }
+
+    const origin = new URL(url).origin;
+    const originVisits = await browser.history.getVisits({
+        url: origin
     });
-}
-
-function getSettings() {
-    return browser.storage.sync.get('whitelist');
-}
-
-function search({whitelist}){
-    return new Promise((resolve, reject) => {
-        browser.history.search({
-            text: "",
-            startTime: 0,
-            maxResults: 1
-        }).then((historyItems) => {
-            resolve({historyItems, whitelist})
-        }).catch((error) => {
-            reject(error)
-        });
+    const urlVisits = await browser.history.getVisits({
+        url
     });
+    const visits = originVisits.concat(urlVisits);
+
+    return handleVisits(visits)
 }
 
-function handleMessage() {
-    return new Promise((resolve, reject) => {
-        getSettings()
-            .then(search)
-            .then(listVisits)
-            .then(resolve)
-            .catch(reject);
+async function getAllowList(){
+    const { whitelist = [] } = await browser.storage.sync.get('whitelist');
+
+    return whitelist;
+}
+
+async function getUrl(){
+    const historyItems =  await browser.history.search({
+        text: "",
+        startTime: 0,
+        maxResults: 1
     });
+
+    return historyItems && historyItems.length > 0 ? historyItems[0].url : undefined
 }
 
+async function checkHistory() {
+    try {
+        return await listVisits();
+    } catch(e){
+        console.error(e)
+    }
+}
 
 function handleBrowserAction(){
     browser.runtime.openOptionsPage();
 }
 
-function redirect(requestDetails) {
-    const { type, url, method } = requestDetails;
-
-    return handleMessage()
-        .then((res) => {
-            const { isVisitedToday } = res;
-            if (isVisitedToday) {
-                return {
-                    redirectUrl: browser.runtime.getURL('/dist/landing.html') + '?host=' + url
-                };
-            }
-
-        })
-}
-
 browser.browserAction.onClicked.addListener(handleBrowserAction);
-browser.runtime.onMessage.addListener(handleMessage);
-//browser.webRequest.onBeforeRequest.addListener(
-//    redirect,
-//    {
-//        urls:["<all_urls>"],
-//        types:["main_frame"]
-//    },
-//    ["blocking"]
-//);
+browser.runtime.onMessage.addListener(checkHistory);
