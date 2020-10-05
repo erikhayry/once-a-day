@@ -16,6 +16,7 @@
   },
   "scripts": {
     "build": "webpack --mode production",
+    "dist": "webpack --mode production && npm run css-compile",
     "scss": "node-sass — watch scss -o css",
     "watch-jsx": "npm-watch",
     "css-compile": "node-sass --output ../dist/css scss/style.scss",
