@@ -37,7 +37,8 @@ class LandingContainer extends Component {
             if ( pairs[i] === "" ) continue;
 
             pair = pairs[i].split("=");
-            obj[ decodeURIComponent( pair[0] ) ] = decodeURIComponent( pair[1] );
+            const key = decodeURIComponent(pair[0]);
+            obj[key] = decodeURIComponent(pair[1]);
         }
 
         return obj;
@@ -51,7 +52,7 @@ class LandingContainer extends Component {
         return browser.storage.sync.set({whitelist})
     }
 
-    onWhitelist( path ){
+    onWhitelist(path){
         const { href } = this.state;
 
         this.getWhitelist()

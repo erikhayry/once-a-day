@@ -1,4 +1,4 @@
-const VERSION = '1.0.0';
+const VERSION = '1.5.0';
 Sentry.init({ dsn: 'https://dd2362f7d005446585e6414b1662594e@sentry.io/1407701' });
 Sentry.configureScope((scope) => {
     scope.setTag("version", VERSION);
@@ -73,7 +73,13 @@ async function getUrl(){
         maxResults: 1
     });
 
-    return historyItems && historyItems.length > 0 ? historyItems[0].url : undefined
+    if(historyItems && historyItems.length > 0){
+        const parsedUrl = new URL(historyItems[0].url)
+
+        return parsedUrl.origin + parsedUrl.pathname
+    }
+
+    return undefined
 }
 
 async function checkHistory() {
