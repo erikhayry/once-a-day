@@ -13,5 +13,6 @@ function handleError(error) {
     console.log(`Error: ${error}`);
 }
 
-browser.runtime.sendMessage({})
-    .then(handleResponse, handleError);
+browser.runtime.sendMessage({
+    url: window.location.href
+}).then(handleResponse, handleError);

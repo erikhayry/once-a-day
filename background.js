@@ -6,8 +6,7 @@ Sentry.configureScope((scope) => {
 const MINUTE = 1000 * 60;
 const ALLOWED_BROWSING_TIME_IN_MINUTES = 20 * MINUTE;
 
-async function handleVisits() {
-    const url = await getUrl();
+async function handleVisits(url) {
     const allowList = await getAllowList();
     const urlIsAllowed = url && allowList.some(allowListItem => url.indexOf(allowListItem) > -1);
 
@@ -46,25 +45,9 @@ async function getAllowList(){
     return whitelist;
 }
 
-async function getUrl(){
-    const historyItems =  await browser.history.search({
-        text: "",
-        startTime: 0,
-        maxResults: 1
-    });
-
-    if(historyItems && historyItems.length > 0){
-        const parsedUrl = new URL(historyItems[0].url)
-
-        return parsedUrl.origin + parsedUrl.pathname
-    }
-
-    return undefined
-}
-
-async function checkHistory() {
+async function checkHistory({ url }) {
     try {
-        return await handleVisits();
+        return await handleVisits(url);
     } catch(e){
         console.error(e)
     }
