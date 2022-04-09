@@ -18,7 +18,7 @@
   "homepage": "https://github.com/erikportin/once-a-day#readme",
   "dependencies": {
     "@sentry/browser": "^4.6.3",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "webextension-polyfill": "^0.4.0"
   },
   "devDependencies": {
